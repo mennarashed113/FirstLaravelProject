@@ -13,10 +13,16 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
+
+     protected $commands = [\App\Console\Commands\expiration::class,
+     \App\Console\Commands\notify::class  ];
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->command('user:expire')->everyMinute();
+        $schedule->command('notify:email')->daily();
     }
+    
 
     /**
      * Register the commands for the application.

@@ -1,7 +1,11 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CrudController;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+
 /*
 |---------------------------------------------------------------------------
 | Web Routes
@@ -14,9 +18,9 @@ use App\Http\Controllers\HomeController;
 */
 
 
-Auth::routes(['verify' =>true]);
+Auth::routes(['verify' => true]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('verified');
+Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('verified');
 
 Route::middleware([
     'auth:sanctum',
@@ -28,6 +32,21 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route:: get('/',function(){
+Route::get('/', function () {
     return 'Home';
 });
+Route::group(
+    [
+        'prefix' => LaravelLocalization::setLocale(),
+        'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
+    ],
+    function () {
+        Route::prefix('offers')->group(function () {
+            Route::get('create', [CrudController::class, 'create'])->name('offers.create');
+            Route::post('store', [CrudController::class, 'store'])->name('offers.store');
+            Route::get('all', [CrudController::class, 'getAllOffers'])->name('offers.all');
+        });
+
+      
+    }
+);
