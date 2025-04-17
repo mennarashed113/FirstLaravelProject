@@ -52,7 +52,7 @@ public function store(OfferRequest $request)
     ]);
 
     return redirect()->back()->with('success', 'Offer created successfully!');
-}
+}///mmmm
 
 // protected function getMessages(){
 //     return [
